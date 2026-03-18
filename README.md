@@ -4,6 +4,7 @@
 
 Every relationship is extracted from SEC 10-K filings. Every edge has a citation. No black boxes.
 
+[![MCP Badge](https://lobehub.com/badge/mcp/academicnair009-vala-fi-mcp)](https://lobehub.com/mcp/academicnair009-vala-fi-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
