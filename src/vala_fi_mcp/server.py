@@ -17,7 +17,7 @@ API_KEY = os.environ.get("VALAFI_API_KEY", "")
 
 mcp = FastMCP(
     "Vala-Fi",
-    description="Financial knowledge graph — company relationships from SEC 10-K filings",
+    instructions="Financial knowledge graph — company relationships from SEC 10-K filings",
 )
 
 _TICKER_RE = re.compile(r"^[A-Z0-9.\-]{1,10}$")
