@@ -38,5 +38,5 @@ vala-fi-mcp = "vala_fi_mcp.server:main"
 [project.urls]
 Homepage = "https://valafi.dev"
 Documentation = "https://valafi.dev/docs"
-Repository = "https://github.com/valafi/vala-fi-mcp"
+Repository = "https://github.com/academicnair009/vala-fi-mcp"
 "Get API Key" = "https://valafi.dev/signup"
