@@ -8,6 +8,7 @@ Think of it as a Bloomberg Terminal you can talk to.
 """
 
 import os
+import re
 import httpx
 from mcp.server.fastmcp import FastMCP
 
@@ -18,6 +19,17 @@ mcp = FastMCP(
     "Vala-Fi",
     description="Financial knowledge graph — company relationships from SEC 10-K filings",
 )
+
+_TICKER_RE = re.compile(r"^[A-Z0-9.\-]{1,10}$")
+
+
+def _validate_ticker(ticker: str) -> str:
+    """Validate and sanitize ticker input to prevent path traversal."""
+    cleaned = ticker.strip().upper()
+    if not _TICKER_RE.match(cleaned):
+        raise ValueError(f"Invalid ticker symbol: {ticker!r}")
+    return cleaned
+
 
 def _headers() -> dict[str, str]:
     if not API_KEY:
@@ -44,7 +56,7 @@ async def get_company_profile(ticker: str) -> dict:
 
     Example: get_company_profile("AAPL") -> Apple Inc., Technology, Consumer Electronics
     """
-    return await _get(f"/v1/company/{ticker.upper()}")
+    return await _get(f"/v1/company/{_validate_ticker(ticker)}")
 
 
 @mcp.tool()
@@ -68,7 +80,7 @@ async def get_supply_chain(
     -> Shows Apple's suppliers, their suppliers, and Apple's customers
     """
     return await _get(
-        f"/v1/company/{ticker.upper()}/supply-chain",
+        f"/v1/company/{_validate_ticker(ticker)}/supply-chain",
         params={"hops": hops, "direction": direction},
     )
 
@@ -83,7 +95,7 @@ async def get_customers(ticker: str) -> dict:
 
     Example: get_customers("TSM") -> Apple, NVIDIA, AMD, Qualcomm...
     """
-    return await _get(f"/v1/company/{ticker.upper()}/customers")
+    return await _get(f"/v1/company/{_validate_ticker(ticker)}/customers")
 
 
 @mcp.tool()
@@ -96,7 +108,7 @@ async def get_competitors(ticker: str) -> dict:
 
     Example: get_competitors("AAPL") -> Microsoft, Samsung, Google...
     """
-    return await _get(f"/v1/company/{ticker.upper()}/competitors")
+    return await _get(f"/v1/company/{_validate_ticker(ticker)}/competitors")
 
 
 @mcp.tool()
@@ -110,7 +122,7 @@ async def find_path(ticker_a: str, ticker_b: str) -> dict:
     Example: find_path("AAPL", "NVDA")
     -> Apple -> TSMC -> NVIDIA (connected through shared semiconductor supplier)
     """
-    return await _get(f"/v1/path/{ticker_a.upper()}/{ticker_b.upper()}")
+    return await _get(f"/v1/path/{_validate_ticker(ticker_a)}/{_validate_ticker(ticker_b)}")
 
 
 @mcp.tool()
@@ -124,7 +136,7 @@ async def get_exposure(ticker: str) -> dict:
     Example: get_exposure("AAPL")
     -> Shows TSMC as a high-risk sole supplier, shared suppliers with peers
     """
-    return await _get(f"/v1/exposure/{ticker.upper()}")
+    return await _get(f"/v1/exposure/{_validate_ticker(ticker)}")
 
 
 @mcp.tool()
@@ -147,6 +159,8 @@ async def get_sector_graph(
 
     Example: get_sector_graph("Technology", relationship_types="supplier")
     """
+    if sector not in SECTORS:
+        raise ValueError(f"Unknown sector: {sector!r}. Valid: {', '.join(SECTORS)}")
     params = {}
     if relationship_types:
         params["relationship_types"] = relationship_types
