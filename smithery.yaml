@@ -1,0 +1,16 @@
+# Smithery configuration: https://smithery.ai/docs/config
+# Used by MCP directories (Smithery, LobeHub) to discover server capabilities
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - valafi_api_key
+    properties:
+      valafi_api_key:
+        type: string
+        description: "Vala-Fi API key (get free at https://valafi.dev/signup)"
+  commandFunction:
+    |-
+    config => ({ command: 'uvx', args: ['vala-fi-mcp'], env: { VALAFI_API_KEY: config.valafi_api_key } })

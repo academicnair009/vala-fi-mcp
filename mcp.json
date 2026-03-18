@@ -1,0 +1,73 @@
+{
+  "name": "Vala-Fi",
+  "description": "Financial knowledge graph — company relationships from SEC 10-K filings. A Bloomberg Terminal you can talk to.",
+  "version": "0.1.0",
+  "homepage": "https://valafi.dev",
+  "repository": "https://github.com/academicnair009/vala-fi-mcp",
+  "license": "MIT",
+  "install": {
+    "command": "uvx",
+    "args": ["vala-fi-mcp"],
+    "env": {
+      "VALAFI_API_KEY": "your_key_here"
+    }
+  },
+  "tools": [
+    {
+      "name": "get_company",
+      "description": "Get company profile by ticker symbol (sector, industry, exchange)"
+    },
+    {
+      "name": "get_supply_chain",
+      "description": "N-hop supply chain traversal — find suppliers, customers, or both with SEC citations"
+    },
+    {
+      "name": "get_customers",
+      "description": "Get all known customers of a company from SEC 10-K filings"
+    },
+    {
+      "name": "get_competitors",
+      "description": "Get all known competitors of a company from SEC 10-K filings"
+    },
+    {
+      "name": "find_path",
+      "description": "Find the shortest path between any two companies in the knowledge graph"
+    },
+    {
+      "name": "get_exposure",
+      "description": "Supply chain concentration risk analysis — shared suppliers, sole-source dependencies"
+    },
+    {
+      "name": "get_sector_graph",
+      "description": "Full relationship subgraph for an entire sector (paid tier)"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "analyze_supply_chain",
+      "description": "Deep-dive a company's full supply chain with risk analysis"
+    },
+    {
+      "name": "compare_companies",
+      "description": "Compare two companies — shared suppliers, paths, competitive overlap"
+    },
+    {
+      "name": "portfolio_risk_check",
+      "description": "Cross-portfolio supply chain risk assessment"
+    },
+    {
+      "name": "due_diligence",
+      "description": "Structured due diligence memo from SEC filing data"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "valafi://sectors",
+      "description": "List of all 11 sectors in the knowledge graph"
+    },
+    {
+      "uri": "valafi://api-info",
+      "description": "API overview, endpoint URL, and free tier limits"
+    }
+  ]
+}
