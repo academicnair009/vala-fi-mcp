@@ -35,14 +35,14 @@ async def _get(path: str, params: dict | None = None) -> dict:
 
 
 @mcp.tool()
-async def get_company(ticker: str) -> dict:
+async def get_company_profile(ticker: str) -> dict:
     """
     Get company profile by ticker symbol.
 
     Returns basic company information including name, sector, industry,
     country, and exchange. Use this to look up any company in the graph.
 
-    Example: get_company("AAPL") -> Apple Inc., Technology, Consumer Electronics
+    Example: get_company_profile("AAPL") -> Apple Inc., Technology, Consumer Electronics
     """
     return await _get(f"/v1/company/{ticker.upper()}")
 
@@ -174,7 +174,7 @@ def api_info() -> str:
     return "\n".join([
         "Vala-Fi Financial Knowledge Graph API",
         f"Endpoint: {API_URL}",
-        "Coverage: 3,900+ companies, 1,600+ relationships, 11 sectors",
+        "Coverage: 5,200+ companies, 8,000+ relationships, 11 sectors",
         "Data source: SEC 10-K annual filings",
         "",
         "Free tier limits:",
@@ -212,7 +212,7 @@ def compare_companies(ticker_a: str, ticker_b: str) -> str:
     """Compare two companies' relationships and find connections."""
     return f"""Compare {ticker_a.upper()} and {ticker_b.upper()}:
 
-1. Use get_company for both to compare sectors and profiles
+1. Use get_company_profile for both to compare sectors and profiles
 2. Use find_path("{ticker_a.upper()}", "{ticker_b.upper()}") to discover how they're connected
 3. Use get_supply_chain for both to compare their supplier networks
 4. Use get_competitors for both to see if they compete or share competitors
@@ -248,7 +248,7 @@ def due_diligence(ticker: str) -> str:
     """Run a due diligence check on a company using SEC filing data."""
     return f"""Run due diligence on {ticker.upper()} using SEC 10-K filing data:
 
-1. get_company("{ticker.upper()}") — basic profile
+1. get_company_profile("{ticker.upper()}") — basic profile
 2. get_supply_chain("{ticker.upper()}", hops=2, direction="both") — full supplier/customer map
 3. get_competitors("{ticker.upper()}") — competitive landscape
 4. get_exposure("{ticker.upper()}") — supply chain risks

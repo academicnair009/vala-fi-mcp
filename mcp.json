@@ -1,7 +1,7 @@
 {
   "name": "Vala-Fi",
   "description": "Financial knowledge graph — company relationships from SEC 10-K filings. A Bloomberg Terminal you can talk to.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://valafi.dev",
   "repository": "https://github.com/academicnair009/vala-fi-mcp",
   "license": "MIT",
@@ -14,8 +14,8 @@
   },
   "tools": [
     {
-      "name": "get_company",
-      "description": "Get company profile by ticker symbol (sector, industry, exchange)"
+      "name": "get_company_profile",
+      "description": "Company name, sector, industry, exchange"
     },
     {
       "name": "get_supply_chain",

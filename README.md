@@ -18,21 +18,7 @@ Bloomberg Terminal costs $24,000/year. FactSet starts at $12,000. PitchBook won'
 
 We extract supplier, customer, and competitor relationships from SEC 10-K annual filings using AI — the same source of truth that institutional investors rely on. The difference: you get it as a structured API with graph traversal, not a 200-page PDF.
 
-**3,900+ companies. 1,600+ relationships. 11 sectors. Free during beta.**
-
----
-
-## What You Can Do
-
-Ask your AI assistant questions like:
-
-- *"Who are Apple's top suppliers?"*
-- *"Find the connection between Tesla and NVIDIA"*
-- *"What companies depend on TSMC as a sole supplier?"*
-- *"Show me all competitors of Microsoft mentioned in SEC filings"*
-- *"What's the supply chain risk for my portfolio: AAPL, MSFT, GOOGL?"*
-
-Every answer comes with the SEC filing citation so you can verify it yourself.
+**5,200+ companies. 8,000+ relationships. 11 sectors. Free during beta.**
 
 ---
 
@@ -44,9 +30,45 @@ Sign up at [valafi.dev/signup](https://valafi.dev/signup) — takes 10 seconds, 
 
 ### 2. Configure your AI assistant
 
-#### Claude Desktop
+#### Remote Server (Recommended — zero install)
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+No packages to install. Just paste the config and go.
+
+**Claude Desktop** — add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS):
+
+```json
+{
+  "mcpServers": {
+    "vala-fi": {
+      "url": "https://mcp.valafi.dev/mcp",
+      "headers": {
+        "X-API-Key": "vfi_your_key_here"
+      }
+    }
+  }
+}
+```
+
+**Cursor** — add to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "vala-fi": {
+      "url": "https://mcp.valafi.dev/mcp",
+      "headers": {
+        "X-API-Key": "vfi_your_key_here"
+      }
+    }
+  }
+}
+```
+
+**Windsurf / Claude Code** — same config format as above.
+
+#### Local Server (Alternative — runs on your machine)
+
+If you prefer running the server locally:
 
 ```json
 {
@@ -62,59 +84,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 }
 ```
 
-#### Cursor
-
-Add to `.cursor/mcp.json` in your project root:
-
-```json
-{
-  "mcpServers": {
-    "vala-fi": {
-      "command": "uvx",
-      "args": ["vala-fi-mcp"],
-      "env": {
-        "VALAFI_API_KEY": "vfi_your_key_here"
-      }
-    }
-  }
-}
-```
-
-#### Windsurf
-
-Add to your Windsurf MCP configuration:
-
-```json
-{
-  "mcpServers": {
-    "vala-fi": {
-      "command": "uvx",
-      "args": ["vala-fi-mcp"],
-      "env": {
-        "VALAFI_API_KEY": "vfi_your_key_here"
-      }
-    }
-  }
-}
-```
-
-#### Claude Code
-
-Add to `.mcp.json` in your project:
-
-```json
-{
-  "mcpServers": {
-    "vala-fi": {
-      "command": "uvx",
-      "args": ["vala-fi-mcp"],
-      "env": {
-        "VALAFI_API_KEY": "vfi_your_key_here"
-      }
-    }
-  }
-}
-```
+Requires Python 3.10+ and [uv](https://docs.astral.sh/uv/).
 
 ### 3. Start asking questions
 
@@ -126,11 +96,11 @@ That's it. Your AI assistant now has access to a financial knowledge graph.
 
 | Tool | Description |
 |------|-------------|
-| `get_company` | Company profile — sector, industry, exchange |
-| `get_supply_chain` | N-hop supply chain traversal (suppliers, customers, or both) |
-| `get_customers` | All known customers of a company |
-| `get_competitors` | All known competitors from SEC filings |
-| `find_path` | Shortest path between any two companies |
+| `get_company_profile` | Company name, sector, industry, exchange |
+| `get_supply_chain` | Upstream/downstream relationships (1-3 hops) |
+| `get_customers` | All known customers with SEC citations |
+| `get_competitors` | All known competitors with SEC citations |
+| `find_path` | Shortest path between two companies |
 | `get_exposure` | Supply chain concentration risk analysis |
 | `get_sector_graph` | Full sector relationship subgraph (paid tier) |
 
@@ -155,6 +125,20 @@ Pre-built prompt templates you can invoke directly:
 |--------------|-------------|
 | `valafi://sectors` | List of all 11 sectors covered in the knowledge graph |
 | `valafi://api-info` | API overview, endpoint URL, and free tier limits |
+
+---
+
+## What You Can Do
+
+Ask your AI assistant questions like:
+
+- *"Who are Apple's top suppliers?"*
+- *"Find the connection between Tesla and NVIDIA"*
+- *"What companies depend on TSMC as a sole supplier?"*
+- *"Show me all competitors of Microsoft mentioned in SEC filings"*
+- *"What's the supply chain risk for my portfolio: AAPL, MSFT, GOOGL?"*
+
+Every answer comes with the SEC filing citation so you can verify it yourself.
 
 ---
 
@@ -201,14 +185,14 @@ You: Who are NVIDIA's main suppliers according to SEC filings?
 Claude: Based on NVIDIA's SEC 10-K filings, here are their key suppliers:
 
 1. **TSMC** (TSM) - Primary foundry partner manufacturing NVIDIA's GPUs
-   📄 "Taiwan Semiconductor Manufacturing Company Limited manufactures
+   "Taiwan Semiconductor Manufacturing Company Limited manufactures
    our GPUs and Tegra processors..." — NVIDIA 10-K
 
 2. **Samsung Electronics** - Secondary foundry for certain chip production
-   📄 "Samsung manufactures different different different different..." — NVIDIA 10-K
+   "Samsung manufactures different different different different..." — NVIDIA 10-K
 
 3. **Amkor Technology** (AMKR) - Packaging and testing services
-   📄 "We use third-party foundries, including TSMC and Samsung,
+   "We use third-party foundries, including TSMC and Samsung,
    and packaging and test providers such as Amkor..." — NVIDIA 10-K
 ```
 
@@ -241,7 +225,7 @@ Full API documentation: [valafi.dev/docs](https://valafi.dev/docs)
 All relationship data is extracted from **SEC 10-K annual filings** using AI. We do not scrape news, social media, or third-party databases.
 
 - Source: [SEC EDGAR](https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany)
-- Coverage: 3,900+ public companies across 11 GICS sectors
+- Coverage: 5,200+ public companies across 11 GICS sectors
 - Update frequency: As new 10-K filings are published (primarily Q1 and Q3)
 - Relationship types: supplier, customer, competitor, partner, and more
 

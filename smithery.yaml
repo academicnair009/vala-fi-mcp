@@ -14,3 +14,6 @@ startCommand:
   commandFunction:
     |-
     config => ({ command: 'uvx', args: ['vala-fi-mcp'], env: { VALAFI_API_KEY: config.valafi_api_key } })
+
+# Remote server also available at https://mcp.valafi.dev/mcp (Streamable HTTP)
+# No local install required — pass X-API-Key header for auth
