@@ -153,6 +153,115 @@ async def get_sector_graph(
     return await _get(f"/v1/sector/{sector}/graph", params=params or None)
 
 
+# ── Resources ──────────────────────────────────────────────────────────
+
+SECTORS = [
+    "Technology", "Healthcare", "Financial Services", "Energy",
+    "Consumer Cyclical", "Industrials", "Communication Services",
+    "Consumer Defensive", "Basic Materials", "Real Estate", "Utilities",
+]
+
+
+@mcp.resource("valafi://sectors")
+def list_sectors() -> str:
+    """List all sectors covered in the Vala-Fi knowledge graph."""
+    return "\n".join(SECTORS)
+
+
+@mcp.resource("valafi://api-info")
+def api_info() -> str:
+    """Vala-Fi API overview and free tier limits."""
+    return "\n".join([
+        "Vala-Fi Financial Knowledge Graph API",
+        f"Endpoint: {API_URL}",
+        "Coverage: 3,900+ companies, 1,600+ relationships, 11 sectors",
+        "Data source: SEC 10-K annual filings",
+        "",
+        "Free tier limits:",
+        "  - 50 requests/day",
+        "  - 10 unique tickers/day",
+        "  - 5 results per query",
+        "  - 2-hop max supply chain depth",
+        "  - Full strength scores and SEC citations",
+        "  - Sector graph endpoint: paid only",
+        "",
+        "Docs: https://valafi.dev/docs",
+        "Get API key: https://valafi.dev/signup",
+    ])
+
+
+# ── Prompts ────────────────────────────────────────────────────────────
+
+
+@mcp.prompt()
+def analyze_supply_chain(ticker: str) -> str:
+    """Deep-dive into a company's supply chain with risk analysis."""
+    return f"""Analyze the full supply chain for {ticker.upper()}:
+
+1. Use get_supply_chain("{ticker.upper()}", hops=2, direction="both") to map suppliers and customers
+2. Use get_competitors("{ticker.upper()}") to identify competitive landscape
+3. Use get_exposure("{ticker.upper()}") to assess concentration risk
+
+For each key relationship, note the SEC 10-K citation evidence.
+Highlight any single-source dependencies or high-risk suppliers.
+Summarize with an overall supply chain health assessment."""
+
+
+@mcp.prompt()
+def compare_companies(ticker_a: str, ticker_b: str) -> str:
+    """Compare two companies' relationships and find connections."""
+    return f"""Compare {ticker_a.upper()} and {ticker_b.upper()}:
+
+1. Use get_company for both to compare sectors and profiles
+2. Use find_path("{ticker_a.upper()}", "{ticker_b.upper()}") to discover how they're connected
+3. Use get_supply_chain for both to compare their supplier networks
+4. Use get_competitors for both to see if they compete or share competitors
+
+Summarize: How are these companies related? Do they share suppliers?
+Are they competitors? What's the shortest path between them?"""
+
+
+@mcp.prompt()
+def portfolio_risk_check(tickers: str) -> str:
+    """Assess supply chain risk across a portfolio of stocks."""
+    ticker_list = [t.strip().upper() for t in tickers.split(",")]
+    steps = []
+    for t in ticker_list:
+        steps.append(f'- get_exposure("{t}") for concentration risk')
+        steps.append(f'- get_supply_chain("{t}", direction="upstream") for supplier dependencies')
+
+    return f"""Analyze supply chain risk for this portfolio: {', '.join(ticker_list)}
+
+For each company:
+{chr(10).join(steps)}
+
+Then cross-reference:
+- Which suppliers appear across multiple portfolio companies? (shared risk)
+- Are there any single-source dependencies?
+- Which sectors have the most concentration risk?
+
+Provide a risk summary table and flag the top 3 risks."""
+
+
+@mcp.prompt()
+def due_diligence(ticker: str) -> str:
+    """Run a due diligence check on a company using SEC filing data."""
+    return f"""Run due diligence on {ticker.upper()} using SEC 10-K filing data:
+
+1. get_company("{ticker.upper()}") — basic profile
+2. get_supply_chain("{ticker.upper()}", hops=2, direction="both") — full supplier/customer map
+3. get_competitors("{ticker.upper()}") — competitive landscape
+4. get_exposure("{ticker.upper()}") — supply chain risks
+
+For each finding, include the SEC filing citation.
+Structure the output as a due diligence memo:
+- Company Overview
+- Key Relationships (suppliers, customers)
+- Competitive Position
+- Supply Chain Risks
+- Summary Assessment"""
+
+
 def main():
     mcp.run()
 

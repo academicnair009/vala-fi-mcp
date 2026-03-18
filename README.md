@@ -135,6 +135,28 @@ That's it. Your AI assistant now has access to a financial knowledge graph.
 
 ---
 
+## Prompts
+
+Pre-built prompt templates you can invoke directly:
+
+| Prompt | Description |
+|--------|-------------|
+| `analyze_supply_chain` | Deep-dive a company's suppliers, customers, competitors, and concentration risk |
+| `compare_companies` | Compare two companies — shared suppliers, paths, competitive overlap |
+| `portfolio_risk_check` | Cross-portfolio supply chain risk assessment (pass comma-separated tickers) |
+| `due_diligence` | Structured due diligence memo from SEC filing data |
+
+---
+
+## Resources
+
+| Resource URI | Description |
+|--------------|-------------|
+| `valafi://sectors` | List of all 11 sectors covered in the knowledge graph |
+| `valafi://api-info` | API overview, endpoint URL, and free tier limits |
+
+---
+
 ## Use Cases
 
 ### Solo Developer / Indie Hacker
