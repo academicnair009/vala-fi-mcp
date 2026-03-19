@@ -68,13 +68,13 @@ No packages to install. Just paste the config and go.
 
 #### Local Server (Alternative — runs on your machine)
 
-If you prefer running the server locally:
+If you prefer running the server locally (required for Claude Desktop):
 
 ```json
 {
   "mcpServers": {
     "vala-fi": {
-      "command": "uvx",
+      "command": "/full/path/to/uvx",
       "args": ["vala-fi-mcp"],
       "env": {
         "VALAFI_API_KEY": "vfi_your_key_here"
@@ -84,7 +84,7 @@ If you prefer running the server locally:
 }
 ```
 
-Requires Python 3.10+ and [uv](https://docs.astral.sh/uv/).
+Find your `uvx` path by running `which uvx` in your terminal. Requires Python 3.10+ and [uv](https://docs.astral.sh/uv/).
 
 ### 3. Start asking questions
 
